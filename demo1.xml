@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:si="http://www.runoob.com/rdf/">
+    <rdf:Description rdf:about="http://www.runoob.com">
+        <si:title>runoob.com</si:title>
+        <si:author>Jan Egil Refsnes</si:author>
+    </rdf:Description>
+</rdf:RDF>
