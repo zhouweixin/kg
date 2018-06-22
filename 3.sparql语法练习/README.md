@@ -145,7 +145,7 @@ where{
 
 **data2.rdf**
 
-```rdf
+```xml
 <rdf:RDF
   xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'
   xmlns:vCard='http://www.w3.org/2001/vcard-rdf/3.0#'
@@ -154,35 +154,36 @@ where{
   <rdf:Description rdf:about="http://somewhere/JohnSmith/">
     <vCard:FN>John Smith</vCard:FN>
     <vCard:N rdf:parseType="Resource">
-	<vCard:Family>Smith</vCard:Family>
-	<vCard:Given>John</vCard:Given>
+      <vCard:Family>Smith</vCard:Family>
+      <vCard:Given>John</vCard:Given>
     </vCard:N>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://somewhere/RebeccaSmith/">
     <vCard:FN>Becky Smith</vCard:FN>
     <vCard:N rdf:parseType="Resource">
-	<vCard:Family>Smith</vCard:Family>
-	<vCard:Given>Rebecca</vCard:Given>
+      <vCard:Family>Smith</vCard:Family>
+      <vCard:Given>Rebecca</vCard:Given>
     </vCard:N>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://somewhere/SarahJones/">
     <vCard:FN>Sarah Jones</vCard:FN>
     <vCard:N rdf:parseType="Resource">
-	<vCard:Family>Jones</vCard:Family>
-	<vCard:Given>Sarah</vCard:Given>
+      <vCard:Family>Jones</vCard:Family>
+      <vCard:Given>Sarah</vCard:Given>
     </vCard:N>
   </rdf:Description>
 
   <rdf:Description rdf:about="http://somewhere/MattJones/">
     <vCard:FN>Matt Jones</vCard:FN>
     <vCard:N
-	vCard:Family="Jones"
-	vCard:Given="Matthew"/>
+      vCard:Family="Jones"
+      vCard:Given="Matthew"/>
   </rdf:Description>
 
 </rdf:RDF>
+
 ```
 
 **RDF图如下所示:**
@@ -193,10 +194,10 @@ where{
 
 ![](images/16.png)
 
-### 4.3 查询测试
+### 4.3 Basic Patterns
 
-**查询语句**
-```
+**1.查询语句**
+```sparql
 SELECT ?x
 WHERE { 
   ?x  <http://www.w3.org/2001/vcard-rdf/3.0#FN>  "John Smith" 
@@ -206,5 +207,127 @@ WHERE {
 **结果**
 ![](images/17.png)
 
+**2.查询语句**
+```sparql
+SELECT ?x ?fname
+WHERE {
+  ?x  <http://www.w3.org/2001/vcard-rdf/3.0#FN>  ?fname
+}
+```
+
+**结果**
+![](images/18.png)
+
+**3.查询语句**
+```sparql
+SELECT ?givenName
+WHERE{ 
+  ?y  <http://www.w3.org/2001/vcard-rdf/3.0#Family>  "Smith" .
+  ?y  <http://www.w3.org/2001/vcard-rdf/3.0#Given>  ?givenName .
+}
+```
+
+**结果**
+![](images/19.png)
+
+### 4.4 Filters
+
+**正则表达式过滤:** *字母不区分大小写*
+匹配包含:r, R, i, I的名称
+```sparql
+PREFIX vcard: <http://www.w3.org/2001/vcard-rdf/3.0#>
+
+SELECT ?g
+WHERE{ 
+  ?y vcard:Given ?g .
+  FILTER regex(?g, "r", "i") 
+}
+```
+
+**结果**
+![](images/20.png)
+
+*导入新的data/data3.rdf数据*
+
+![](images/21.png)
+
+### 4.5 Optional
+
+**查询语句**
+
+```
+PREFIX info:    <http://somewhere/peopleInfo#>
+PREFIX vcard:   <http://www.w3.org/2001/vcard-rdf/3.0#>
+
+SELECT ?name ?age
+WHERE{
+    ?person vcard:FN  ?name .
+    OPTIONAL { ?person info:age ?age }
+}
+```
+
+**结果**
+
+![](images/22.png)
+
+*可选语句表示可满足可不满足, 可与下面的作对比*
+
+**查询语句**
+
+```
+PREFIX info:    <http://somewhere/peopleInfo#>
+PREFIX vcard:   <http://www.w3.org/2001/vcard-rdf/3.0#>
+
+SELECT ?name ?age
+WHERE{
+    ?person vcard:FN  ?name .
+    ?person info:age ?age .
+}
+```
+
+**结果**
+
+![](images/23.png)
+
+### 4.6 Option 和 Filter的组合
+
+**查询语句**
+
+```
+PREFIX info:        <http://somewhere/peopleInfo#>
+PREFIX vcard:      <http://www.w3.org/2001/vcard-rdf/3.0#>
+
+SELECT ?name ?age
+WHERE{
+    ?person vcard:FN  ?name .
+    OPTIONAL { ?person info:age ?age . FILTER ( ?age > 24 ) }
+}
+```
+
+**结果**
+
+![](images/24.png)
+
+组合语句可与4.5节的两个作一下对比
+
+**bound 包含函数**
+
+**查询语句**
+
+```
+PREFIX info:        <http://somewhere/peopleInfo#>
+PREFIX vcard:      <http://www.w3.org/2001/vcard-rdf/3.0#>
+
+SELECT ?name ?age
+WHERE{
+    ?person vcard:FN  ?name .
+    OPTIONAL { ?person info:age ?age . }
+    FILTER ( !bound(?age) || ?age > 24 )
+}
+```
+
+**结果**
+
+![](images/25.png)
 
 ## 未完待续...

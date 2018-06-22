@@ -1,0 +1,13 @@
+<rdf:RDF 
+    xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' 
+    xmlns:vCard='http://www.w3.org/2001/vcard-rdf/3.0#' 
+    xmlns:foaf='http://xmlns.com/foaf/0.1/'>
+
+    <rdf:a><foaf:name>Matt Jones</foaf:name></rdf:a>
+
+    <rdf:b><foaf:name>Sarah Jones</foaf:name></rdf:b>
+
+    <rdf:c><vCard:FN>Becky Smith</vCard:FN></rdf:c>
+
+    <rdf:d><vCard:FN>John Smith</vCard:FN></rdf:d>
+</rdf:RDF>
